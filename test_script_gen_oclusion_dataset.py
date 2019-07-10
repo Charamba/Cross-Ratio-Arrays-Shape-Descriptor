@@ -108,7 +108,9 @@ def bbox_object(img):
 
 
 def generate_oclusion_dataset(template_folder, image_name, path_result, alpha):
-    base_name = image_name.split('.')[0] + '_p' + str(alpha)
+
+    str_alpha = str(int(alpha*100))
+    base_name = image_name.split('.')[0] + '_' + str_alpha + 'pc'
 
     #print("ratio = ", r)
 
@@ -170,7 +172,7 @@ argc = len(sys.argv)
 
 if argc < 4:
     print("Correct use:")
-    print(">> python3 test_script_gen_oclusion_dataset.py [template_folder] [result_folder] [alpha]")
+    print(">> python3 test_script_gen_oclusion_dataset.py <template_folder> <result_folder> <alpha>")
 else:
     template_folder = sys.argv[1]
     path_result = sys.argv[2]
