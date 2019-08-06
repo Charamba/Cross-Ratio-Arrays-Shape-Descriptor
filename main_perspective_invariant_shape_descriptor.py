@@ -200,7 +200,7 @@ if convex_hull_flag:
 	print("add_points_number = ", add_points_number)
 
 	convexHullVertices = testImage.convex_hull_add_points(additive_points_number=add_points_number)#convex_hull(interpoints_sample=0)
-	print("(*) Scanning template image...")
+	print("(*) Scanning test image...")
 	print("- convex hull vertices: ", len(convexHullVertices))
 else:
 	print("Hull type: CONTOUR")
@@ -213,13 +213,8 @@ else:
 	print("add_points_number = ", add_points_number)
 
 	convexHullVertices = testImage.convex_hull_add_points(additive_points_number=add_points_number)#convex_hull(interpoints_sample=0)
-	print("(*) Scanning template image...")
+	print("(*) Scanning test image...")
 	print("- convex hull vertices: ", len(convexHullVertices))
-
-
-print("(*) Scanning test image...")
-print("- convex hull vertices: ", len(convexHullVertices))
-
 
 start_time = time.time()
 
@@ -390,6 +385,8 @@ plt.imshow(testImage.image, interpolation='none', origin='upper', extent=[0, row
 #testImage.showPatches(fig, ax2)
 ax2.axis('off')
 testImage.show()
+
+print("Edge points distance = " + dist_edge_str)
 
 #plt.title("Edge points distance = " + dist_edge_str, fontsize=15, color='blue')
 #n = len(matchedVerticesPairs)
