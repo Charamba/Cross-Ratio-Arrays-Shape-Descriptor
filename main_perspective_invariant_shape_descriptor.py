@@ -370,8 +370,8 @@ dist_edge_str = '%.4f' % dist_edge
 #x_label, y_label = -xT*0.15, max(yT, yQ)
 
 x_label, y_label = -5, .5
-plt.title("Hull points distance = " + dist_hull_str, fontsize=15, color='red')
-
+#plt.title("Hull points distance = " + dist_hull_str, fontsize=15, color='red')
+print("Hull points distance = " + dist_hull_str)
 
 
 # Show Test Image
@@ -391,7 +391,7 @@ plt.imshow(testImage.image, interpolation='none', origin='upper', extent=[0, row
 ax2.axis('off')
 testImage.show()
 
-plt.title("Edge points distance = " + dist_edge_str, fontsize=15, color='blue')
+#plt.title("Edge points distance = " + dist_edge_str, fontsize=15, color='blue')
 #n = len(matchedVerticesPairs)
 #n = len(mTemplRays*16)
 
