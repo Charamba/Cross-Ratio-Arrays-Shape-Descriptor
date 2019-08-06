@@ -180,6 +180,11 @@ end_time = time.time()
 time_elapsed = end_time - start_time 
 print("Scan complete! time: ", time_elapsed)
 
+len_template_rays = len(templateDescriptor.raysTable.getValues())
+print("N rays template = ", len_template_rays)
+print("N edge points template =", templateDescriptor.numberOfEdgePoints)
+print("Mean edge points = ", float(templateDescriptor.numberOfEdgePoints)/len_template_rays)
+
 # -----
 
 convexHullVertices_orig = testImage.convex_hull()
@@ -238,6 +243,12 @@ testImage.plotLinePoints(emitter_points, color="yo", ciclic=True, writeOrder=Fal
 end_time = time.time()
 time_elapsed = end_time - start_time
 print("Scan complete! time: ", time_elapsed)
+
+len_test_rays = len(testDescriptor.raysTable.getValues())
+print("N rays test = ", len_test_rays)
+print("N edge points test =", testDescriptor.numberOfEdgePoints)
+print("Mean edge points = ", float(testDescriptor.numberOfEdgePoints)/len_test_rays)
+
 
 print("(**) Comparing features...")
 
