@@ -377,7 +377,7 @@ print("Mean edge points = ", float(testDescriptor.numberOfEdgePoints)/len_test_r
 
 print("(**) Comparing features...")
 
-matchingProcessor = MatchingProcessor(templateDescriptor, testDescriptor)
+matchingProcessor = CRS_MatchingProcessor(templateDescriptor, testDescriptor)
 test_vertices_rectif = []
 templ_edge_pts = []
 test_edge_pts = []
