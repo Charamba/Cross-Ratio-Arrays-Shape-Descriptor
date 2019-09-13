@@ -217,7 +217,7 @@ class Image(Plotter):
 
 		return edgePoints, list(set(visitedWhitePixels))
 
-	def calc_edgePoints(self, P0, Pf, s=None, theta=None, showTrajectories=False):
+	def calc_edgePoints(self, P0, Pf, s=None, theta=None, showTrajectories=False, FULL_POINTS=False):
 		#print("P0 = ", P0)
 		visitedWhitePixels = []
 		lamb = P0.euclideanDistance(Pf)
@@ -322,9 +322,9 @@ class Image(Plotter):
 				countWhitePixels = 0
 
 		# Extreme points
-		if pxVal0 > 0:
+		if pxVal0 > 0 or FULL_POINTS:
 			edgePoints = [P0_px] + edgePoints
-		if pxValf > 0:
+		if pxValf > 0 or FULL_POINTS:
 			edgePoints = edgePoints + [Pf_px]
 
 		return (visitedWhitePixels, edgePoints, s)

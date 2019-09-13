@@ -123,7 +123,7 @@ class Scanner:
             #s = 1
             shapeDescriptor.addRay(s, theta, edgePoints, whitePixels=[])#whitePixels=whitePixels)
 
-    def fanBeam(self, shapeDescriptor, P0, flag_inlcude_P0, otherPoints, showTrajectories=False):
+    def fanBeam(self, shapeDescriptor, P0, flag_inlcude_P0, otherPoints, showTrajectories=False, FULL_POINTS=False):
         (h, w) = self.image.getShape()
         rayList = []
 
@@ -149,7 +149,7 @@ class Scanner:
 
             Pf__ = P0_ + 1*(Pf_ - P0_)
             #P0__ = P0_ - 0.1*(Pf_ - P0_)                             Pf__, P0_,
-            (whitePixels, edgePoints, _) = self.image.calc_edgePoints(Pf__, P0_, showTrajectories=showTrajectories)
+            (whitePixels, edgePoints, _) = self.image.calc_edgePoints(Pf__, P0_, showTrajectories=showTrajectories, FULL_POINTS=FULL_POINTS)
             
             P0_ = R2_Point(x0, y0)
             edgePoints.append(P0_)
@@ -263,7 +263,7 @@ class Scanner:
 
         return targetPoints
 
-    def hull_scan(self, polygonVertices, convexHullVertices_original, fanBeamRays=2, showTrajectories=False, verticeIndexList=[]):
+    def hull_scan(self, polygonVertices, convexHullVertices_original, fanBeamRays=2, showTrajectories=False, verticeIndexList=[], FULL_POINTS=False):
         descriptor = ShapeDescriptor()
         descriptor.hullVertices = polygonVertices
         (h, w) = self.image.getShape()
@@ -299,7 +299,7 @@ class Scanner:
                 #print("i = %d, targetPoints = %d" %(iBeam, len(targetPoints)))
                 flag_inlcude_P0 = P0 in convexHullVertices_original
 
-                self.fanBeam(descriptor, P0, flag_inlcude_P0, targetPoints, showTrajectories=showTrajectories)
+                self.fanBeam(descriptor, P0, flag_inlcude_P0, targetPoints, showTrajectories=showTrajectories, FULL_POINTS=FULL_POINTS)
         return descriptor
 
     def hull_scan_for_contour(self, polygonVertices, convexHullVertices_original, targetPoints, fanBeamRays=2, showTrajectories=False, verticeIndexList=[]):

@@ -47,6 +47,8 @@ def is_even (a):
 # 	return a
 # ================================= FLAGS ===================================== #
 
+FULL_POINTS = True # To CRS method
+
 # plot: 
 showScanRays = False
 showMatchRays = False # MATCH RAYS
@@ -135,27 +137,30 @@ class CRS_MatchingProcessor(MatchingProcessor):
 		#matchPairsRays = []
 
 		templateSpectre = []
+		testSpectre = []
 
 		for ray in rays1:
-
-			cr_value = -1
+			cr_value = -1 # if numberOfEdgePoints <= 2 
 			if ray.numberOfEdgePoints >= 4:
 				P0, P1, P2, P3 = ray.edgePoints[0], ray.edgePoints[1], ray.edgePoints[2], ray.edgePoints[-1]
 				cr_value = crossRatio(P0, P1, P2, P3)
 			elif ray.numberOfEdgePoints == 3:
 				cr_value = 0
+			templateSpectre.append(cr_value)
 
+		for ray in rays2:
+			cr_value = -1 # if numberOfEdgePoints <= 2 
+			if ray.numberOfEdgePoints >= 4:
+				P0, P1, P2, P3 = ray.edgePoints[0], ray.edgePoints[1], ray.edgePoints[2], ray.edgePoints[-1]
+				cr_value = crossRatio(P0, P1, P2, P3)
+			elif ray.numberOfEdgePoints == 3:
+				cr_value = 0
+			testSpectre.append(cr_value)
 
-
-		templateSpectre = self.generateSimpleTopologySpectre(mTemplateRays)
-		testSpectre = self.generateSimpleTopologySpectre(mTestRays)
 
 		#(templateSpectre, testSpectre) = self.generateKeySpectres(mTemplateRays, mTestRays)
 
-		n = len(mTemplateRays)
-		costBinFunct = costFunctionBinary()
-		dtw = DTW(templateSpectre, testSpectre, costBinFunct)
-		n = len(mTemplateRays)
+		dtw = DTW(templateSpectre, testSpectre)
 		dtw_dist = dtw.distance()
 
 
@@ -167,8 +172,7 @@ class CRS_MatchingProcessor(MatchingProcessor):
 		testSpectreReversed = testSpectre
 		testSpectreReversed.reverse()
 
-		dtw = DTW(templateSpectre, testSpectreReversed, costBinFunct)
-		n = len(mTemplateRays)
+		dtw = DTW(templateSpectre, testSpectreReversed)
 		dtw_dist = dtw.distance()
 
 		#error_distance = totalRays - n
@@ -189,8 +193,6 @@ class CRS_MatchingProcessor(MatchingProcessor):
 		#print("CR5 distance = ", CR5_distance)
 		#return ((1-abs(p)), matchedTemplateRays, matchedTestRays)
 		#return (distance_normalized*(1-abs(p)), matchedTemplateRays, matchedTestRays)
-
-
 
 		return (distance_normalized, matchedTemplateRays, matchedTestRays)
 
@@ -284,7 +286,7 @@ start_time = time.time()
 if convex_hull_flag:
 	emitter_points = convexHullVertices
 	emitter_points_orig = convexHullVertices_orig
-	templateDescriptor = templateScanner.hull_scan(emitter_points, convexHullVertices_orig, fanBeamRays=template_nFanBeam, showTrajectories=showTrajectories, verticeIndexList=[])#0 #45
+	templateDescriptor = templateScanner.hull_scan(emitter_points, convexHullVertices_orig, fanBeamRays=template_nFanBeam, showTrajectories=showTrajectories, verticeIndexList=[], FULL_POINTS=FULL_POINTS)#0 #45
 else:
 	emitter_points = templateImage.contour_hull(nPoints=emitter_points_number)
 	print("n emitter_points = ", len(emitter_points))
@@ -349,7 +351,7 @@ start_time = time.time()
 if convex_hull_flag:
 	emitter_points = convexHullVertices
 	emitter_points_orig = convexHullVertices_orig
-	testDescriptor = testScanner.hull_scan(emitter_points, convexHullVertices_orig, fanBeamRays=template_nFanBeam, showTrajectories=showTrajectories, verticeIndexList=[])#0 #45
+	testDescriptor = testScanner.hull_scan(emitter_points, convexHullVertices_orig, fanBeamRays=template_nFanBeam, showTrajectories=showTrajectories, verticeIndexList=[], FULL_POINTS=FULL_POINTS)#0 #45
 else:
 	emitter_points = testImage.contour_hull(nPoints=emitter_points_number)
 	print("n emitter_points = ", len(emitter_points))
@@ -410,7 +412,7 @@ if compare:
 	template_pts = np.array([[templ_pt.x, templ_pt.y] for (templ_pt, _) in matchedVerticesPairs])
 	test_pts     = np.array([[test_pt.x, test_pt.y] for (_, test_pt) in matchedVerticesPairs])
 
-	## Estimando homografia e erro de transferência pelos vértices associados
+	## Estimando homografia e erro de transferencia pelos vertices associados
 	
 	(dist_hull, new_template_pts, new_test_pts, hinv) = calc_homography_distance(template_pts, test_pts)
 	print("percentual transfer error distance (hull vertices): ", dist_hull)
