@@ -18,7 +18,6 @@ from MatchingProcessor import *
 from hull_contour import curves_from_rasterized_img
 from find_homography_distance import calc_hausdorff_distance, calc_homography, calc_homography_distance, transf_points
 
-
 ## Close window and change progress in code
 def press(event):
 	#print('press', event.key)
@@ -59,7 +58,7 @@ convex_hull_scan_template = True
 convex_hull_scan_test = True
 
 # convex-hull fan-beam parameters
-SAMPLE = 150
+SAMPLE = 60
 
 template_nFanBeam = SAMPLE
 test_nFanBeam = SAMPLE
@@ -76,6 +75,14 @@ convex_hull_flag = True
 # SHAPE FLAG (symetryc=True, assimetric=False)
 symetric_shape_flag = True
 
+
+
+class costCRSFunction:
+	def compute(self, val1, val2):
+		logval1 = -1.0 if (val1 == -1.0) else -0.5 if (val1 == 0.0) else math.log(val1) 
+		logval2 = -1.0 if (val2 == -1.0) else -0.5 if (val2 == 0.0) else math.log(val2)
+		denominator = logval2 + logval1 if (logval2 + logval1) != 0 else 0.0001
+		return abs((logval2 - logval1)/denominator)
 
 # =============================================================================
 # ========================= CRS MATCHING PROCESSOR  ===========================
@@ -157,10 +164,10 @@ class CRS_MatchingProcessor(MatchingProcessor):
 				cr_value = 0
 			testSpectre.append(cr_value)
 
-
+		costCRSFunct_obj = costCRSFunction()
 		#(templateSpectre, testSpectre) = self.generateKeySpectres(mTemplateRays, mTestRays)
 
-		dtw = DTW(templateSpectre, testSpectre)
+		dtw = DTW(templateSpectre, testSpectre, costCRSFunct_obj)
 		dtw_dist = dtw.distance()
 
 
@@ -172,7 +179,7 @@ class CRS_MatchingProcessor(MatchingProcessor):
 		testSpectreReversed = testSpectre
 		testSpectreReversed.reverse()
 
-		dtw = DTW(templateSpectre, testSpectreReversed)
+		dtw = DTW(templateSpectre, testSpectreReversed, costCRSFunct_obj)
 		dtw_dist = dtw.distance()
 
 		#error_distance = totalRays - n
@@ -382,6 +389,9 @@ test_vertices_rectif = []
 templ_edge_pts = []
 test_edge_pts = []
 
+distance_values = []
+min_dist_val = float("Inf")
+
 if compare:
 	start_time = time.time()
 	(matchedVerticesPairs, distance_values, mTemplRays, mTestRays) = matchingProcessor.compareByPencils()
@@ -396,7 +406,14 @@ if compare:
 	with open(str_filename, 'wb') as outfile:  
 		pickle.dump(matchedVerticesPairs_json_data, outfile)
 
+	print("min_dist_val = ", min_dist_val)
+	min_dist_val = min(distance_values)
+	print("1.min_dist_val = ", min_dist_val)
 	(matchedVerticesPairs, distanceValues) = fanbeams_threshold_distance(matchedVerticesPairs, distance_values)
+	min_dist_val = min(distanceValues)
+	print("2.min_dist_val = ", min_dist_val)
+
+
 
 	end_time = time.time()
 	time_elapsed = end_time - start_time
@@ -414,8 +431,10 @@ if compare:
 
 	## Estimando homografia e erro de transferencia pelos vertices associados
 	
-	(dist_hull, new_template_pts, new_test_pts, hinv) = calc_homography_distance(template_pts, test_pts)
-	print("percentual transfer error distance (hull vertices): ", dist_hull)
+	#(dist_hull, new_template_pts, new_test_pts, hinv) = calc_homography_distance(template_pts, test_pts)
+	dist_hull = None
+	(new_template_pts, new_test_pts) = (template_pts, test_pts) 
+	# print("percentual transfer error distance (hull vertices): ", dist_hull)
 	# test_pts = [R2_Point(point[0],point[1]) for point in test_pts]
 	# test_vertices_rectif = transf_points(hinv, new_test_pts)
 	# test_vertices_rectif = [R2_Point(point[0],point[1]) for point in test_vertices_rectif]
@@ -436,9 +455,14 @@ if compare:
 	templ_edge_pts = np.array([[templ_pt.x, templ_pt.y] for templ_pt in templ_edge_pts])
 	test_edge_pts  = np.array([[test_pt.x, test_pt.y] for test_pt in test_edge_pts])
 
-	(dist_edge, new_edge_templ_pts, new_edge_test_pts, hinv) = calc_homography_distance(templ_edge_pts, test_edge_pts)
+	#(dist_edge, new_edge_templ_pts, new_edge_test_pts, hinv) = calc_homography_distance(templ_edge_pts, test_edge_pts)
+	#dist_edge = None
+	#print("percentual transfer error distance (edge points): ", dist_edge)
 
-	print("percentual transfer error distance (edge points): ", dist_edge)
+
+
+
+
 	if showMatchRays:
 		for templRay in mTemplRays:
 			#templateImage.plotLinePoints(templRay.edgePoints, color="k", correction=True)
@@ -492,6 +516,8 @@ ax1.axis('off')
 templateImage.show()
 
 
+dist_hull, dist_edge = (0,0)
+
 dist_hull_str = '%.4f' % dist_hull
 dist_edge_str = '%.4f' % dist_edge
 
@@ -502,7 +528,7 @@ dist_edge_str = '%.4f' % dist_edge
 
 x_label, y_label = -5, .5
 #plt.title("Hull points distance = " + dist_hull_str, fontsize=15, color='red')
-print("Hull points distance = " + dist_hull_str)
+#print("Hull points distance = " + dist_hull_str)
 
 
 # Show Test Image
@@ -522,7 +548,7 @@ plt.imshow(testImage.image, interpolation='none', origin='upper', extent=[0, row
 ax2.axis('off')
 testImage.show()
 
-print("Edge points distance = " + dist_edge_str)
+#print("Edge points distance = " + dist_edge_str)
 
 #plt.title("Edge points distance = " + dist_edge_str, fontsize=15, color='blue')
 #n = len(matchedVerticesPairs)
