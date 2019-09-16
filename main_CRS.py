@@ -58,7 +58,7 @@ convex_hull_scan_template = True
 convex_hull_scan_test = True
 
 # convex-hull fan-beam parameters
-SAMPLE = 60
+SAMPLE = 150
 
 template_nFanBeam = SAMPLE
 test_nFanBeam = SAMPLE
