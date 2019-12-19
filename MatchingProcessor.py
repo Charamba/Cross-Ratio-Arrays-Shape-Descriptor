@@ -714,6 +714,7 @@ class MatchingProcessor:
 				best_matchedTemplateRays = matchedTemplateRays
 				best_matchedTestRays = matchedTestRays
 
+		
 		#print("best idx = ", bestIdx)
 		return (bestIdx, best_distance, best_matchedTemplateRays, best_matchedTestRays)
 
@@ -790,7 +791,8 @@ class MatchingProcessor:
 		# USANDO DESLOCAMENTO SIMPLIFICADO e DTW e Spectros de "rotulos"
 		templateSpectre = self.generateSimpleTopologySpectre(mTemplateRays)
 		testSpectre = self.generateSimpleTopologySpectre(mTestRays)
-
+		print("templateSpectre: ", templateSpectre)
+		print("testSpectre: ", testSpectre)
 		#(templateSpectre, testSpectre) = self.generateKeySpectres(mTemplateRays, mTestRays)
 
 		n = len(mTemplateRays)

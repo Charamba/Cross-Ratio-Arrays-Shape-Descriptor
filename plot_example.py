@@ -40,15 +40,24 @@ spectre2 = [1, 1, 8, 1, 6, 1, 8, 1, 1, 1, 1, 1, 1, 6, 4, 1, 1]#[0, 0, 8, 0, 6, 0
 spectre1 = [0,0,0,0,0,0,0,0,0,0,0,0, 8, 6, 8, 6, 4]
 spectre2 = [1,1,1,1,1,1,1,1,1,1,1,1, 8, 6, 8, 6, 4]
 
+division = 43
+templateSpectre =  division*[1]+[6, 24, 22, 20, 16, 4, 4]
+testSpectre =      division*[1]+[4, 4, 6, 24, 22, 20, 16]
 
-leastSquares(points,  weighted=False)
+# templateSpectre =  [6, 24, 22, 20, 16, 4, 4]
+# testSpectre =      [4, 4, 6, 24, 22, 20, 16]
+
+spectre1 = templateSpectre
+spectre2 = testSpectre
+
+# leastSquares(points,  weighted=False)
 
 
 # spectre2 = spectre1
 #spectre2 = [8, 6, 8, 6, 4]
 
-offset_1 = 0
-offset_2 = 10
+offset_1 = 25
+offset_2 = 0
 
 spectre1_ = []
 for s1 in spectre1:
@@ -68,7 +77,7 @@ dtw = DTW(spectre1, spectre2)#, costBinFunct)
 dtw.equalityLengthSpectres()
 print("DTW default distance: ", dtw.distance())
 
-P = dtw.findOptmPath2()
+P = dtw.findOptmPath()
 
 print("Path: ", P)
 
@@ -77,24 +86,30 @@ for i in range(0, dtw.m):
 	M[i] = [1]*dtw.n
 
 # TERMO_A_TERMO
-for i in range(len(spectre1_)):
-	x_1 = i
-	x_2 = i
-	y_1 = spectre1_[i]
-	y_2 = spectre2_[i] 
-	gray = 0.65
-	plt.plot([x_1, x_2], [y_1, y_2], color=(gray, gray, gray), linestyle=":", linewidth=2.0) # color=(0.5, 1.0, 0.5)
-
-
-# for tp in P:
-# 	(i, j) = tp
-# 	M[i][j] = 0
+# for i in range(len(spectre1_)):
 # 	x_1 = i
-# 	x_2 = j
+# 	x_2 = i
 # 	y_1 = spectre1_[i]
-# 	y_2 = spectre2_[j] 
+# 	y_2 = spectre2_[i] 
 # 	gray = 0.65
 # 	plt.plot([x_1, x_2], [y_1, y_2], color=(gray, gray, gray), linestyle=":", linewidth=2.0) # color=(0.5, 1.0, 0.5)
+
+
+for idx,tp in enumerate(P):
+	(i, j) = tp
+	M[i][j] = 0
+	x_1 = i
+	x_2 = j
+	y_1 = spectre1_[i]
+	y_2 = spectre2_[j] 
+	gray = 1.0#0.65
+
+	if idx >= division:
+		gray = 0.65
+	
+	color_tuple = (gray, gray, gray)
+
+	plt.plot([x_1, x_2], [y_1, y_2], color=color_tuple, linestyle="-", linewidth=1.0) # color=(0.5, 1.0, 0.5)
 
 print("M:")
 print(dtw.M)
