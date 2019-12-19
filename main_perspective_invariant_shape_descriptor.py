@@ -47,7 +47,7 @@ def is_even (a):
 
 # plot: 
 showScanRays = False
-showMatchRays = False # MATCH RAYS
+showMatchRays = True # MATCH RAYS
 showTrajectories = False
 
 # scan: tomographic, convex-hull
@@ -161,7 +161,7 @@ start_time = time.time()
 if convex_hull_flag:
 	emitter_points = convexHullVertices
 	emitter_points_orig = convexHullVertices_orig
-	templateDescriptor = templateScanner.hull_scan(emitter_points, convexHullVertices_orig, fanBeamRays=template_nFanBeam, showTrajectories=showTrajectories, verticeIndexList=[])#0 #45
+	templateDescriptor = templateScanner.hull_scan(emitter_points, convexHullVertices_orig, fanBeamRays=template_nFanBeam, showTrajectories=showTrajectories, verticeIndexList=[0])#0 #45
 else:
 	emitter_points = templateImage.contour_hull(nPoints=emitter_points_number)
 	print("n emitter_points = ", len(emitter_points))
@@ -226,7 +226,7 @@ start_time = time.time()
 if convex_hull_flag:
 	emitter_points = convexHullVertices
 	emitter_points_orig = convexHullVertices_orig
-	testDescriptor = testScanner.hull_scan(emitter_points, convexHullVertices_orig, fanBeamRays=template_nFanBeam, showTrajectories=showTrajectories, verticeIndexList=[])#0 #45
+	testDescriptor = testScanner.hull_scan(emitter_points, convexHullVertices_orig, fanBeamRays=template_nFanBeam, showTrajectories=showTrajectories, verticeIndexList=[34])#0 #45
 else:
 	emitter_points = testImage.contour_hull(nPoints=emitter_points_number)
 	print("n emitter_points = ", len(emitter_points))
@@ -271,7 +271,9 @@ if compare:
 	with open(str_filename, 'wb') as outfile:  
 		pickle.dump(matchedVerticesPairs_json_data, outfile)
 
-	(matchedVerticesPairs, distanceValues) = fanbeams_threshold_distance(matchedVerticesPairs, distance_values)
+	tuple_returned = fanbeams_threshold_distance(matchedVerticesPairs, distance_values)
+
+	(matchedVerticesPairs, distanceValues) = tuple_returned
 
 	end_time = time.time()
 	time_elapsed = end_time - start_time
@@ -299,10 +301,13 @@ if compare:
 
 	# new_template_pts = template_pts
 	# new_test_pts = test_pts
-	for templ_pt, test_pt in zip(new_template_pts, new_test_pts):
-		templ_pt = R2_Point(templ_pt[0], templ_pt[1])
-		test_pt  = R2_Point(test_pt[0], test_pt[1])
-		matchedVerticesPairs.append((templ_pt, test_pt))
+	print("new_template_pts = ", new_template_pts)
+
+	if new_template_pts is not None and new_test_pts is not None:
+		for templ_pt, test_pt in zip(new_template_pts, new_test_pts):
+			templ_pt = R2_Point(templ_pt[0], templ_pt[1])
+			test_pt  = R2_Point(test_pt[0], test_pt[1])
+			matchedVerticesPairs.append((templ_pt, test_pt))
 
 	for templRay, testRay in zip(mTemplRays, mTestRays):
 		templ_edge_pts = templ_edge_pts + templRay.edgePoints
@@ -317,15 +322,15 @@ if compare:
 	if showMatchRays:
 		for templRay in mTemplRays:
 			#templateImage.plotLinePoints(templRay.edgePoints, color="k", correction=True)
-			templateImage.plotLinePoints(templRay.edgePoints, color="c", correction=True)
-			#templateImage.plotLinePoints(templRay.edgePoints, color="ko", correction=True, writeOrder=False)
-			templateImage.plotLinePoints(templRay.edgePoints, color="co", correction=True, writeOrder=False)
+			templateImage.plotLinePoints(templRay.edgePoints, color="b", correction=True)
+			templateImage.plotLinePoints(templRay.edgePoints, color="ko", correction=True, writeOrder=False)
+			templateImage.plotLinePoints(templRay.edgePoints, color="bo", correction=True, writeOrder=False)
 
 		for testRay in mTestRays:
 			#testImage.plotLinePoints(testRay.edgePoints, color="k", correction=True)
-			testImage.plotLinePoints(testRay.edgePoints, color="c", correction=True)
-			#testImage.plotLinePoints(testRay.edgePoints, color="ko", correction=True, writeOrder=False)
-			testImage.plotLinePoints(testRay.edgePoints, color="co", correction=True, writeOrder=False)
+			testImage.plotLinePoints(testRay.edgePoints, color="r", correction=True)
+			testImage.plotLinePoints(testRay.edgePoints, color="ko", correction=True, writeOrder=False)
+			testImage.plotLinePoints(testRay.edgePoints, color="ro", correction=True, writeOrder=False)
 
 
 
@@ -365,7 +370,6 @@ plt.imshow(templateImage.image, interpolation='none', origin='upper', extent=[0,
 #templateImage.showPatches(fig, ax1)
 ax1.axis('off')
 templateImage.show()
-
 
 dist_hull_str = '%.4f' % dist_hull
 dist_edge_str = '%.4f' % dist_edge

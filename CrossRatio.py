@@ -5,7 +5,7 @@ import copy
 from Utils import *
 # 0.046
 #valTol = 0.76#0.0015#0.25#0.073
-percentualTol = 0.1#0.081#0.05#0.012
+percentualTol = 0.2#0.081#0.05#0.012
 # 0.03512794452
 def simpleRatio(A, B, C):
 	AC = A.euclideanDistance(C)

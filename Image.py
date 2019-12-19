@@ -338,8 +338,8 @@ class Image(Plotter):
 
 		for x in range(width):
 			for y in range(height):
-				pxVal = self.image[y][x][0]# max(self.image[y][x][0], self.image[y][x][1], self.image[y][x][2]) 
-				if pxVal > 0:
+				pxVal = max(self.image[y][x][0], self.image[y][x][1],  self.image[y][x][2])
+				if pxVal > 12:
 					xCoord = int(x - halfWidth)
 					yCoord = int(y - halfHeight)
 					whitePoints.append(R2_Point(xCoord,yCoord))
