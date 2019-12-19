@@ -338,7 +338,7 @@ class Image(Plotter):
 
 		for x in range(width):
 			for y in range(height):
-				pxVal = self.image[y][x][0]
+				pxVal = self.image[y][x][0]# max(self.image[y][x][0], self.image[y][x][1], self.image[y][x][2]) 
 				if pxVal > 0:
 					xCoord = int(x - halfWidth)
 					yCoord = int(y - halfHeight)
