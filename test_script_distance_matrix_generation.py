@@ -2,7 +2,7 @@ import pickle
 import os
 import sys
 from calc_distance_by_matching_vertices import calc_espectre_distance
-
+import math
 
 # ARGS
 matching_folder = sys.argv[1]
@@ -54,7 +54,8 @@ for (template_name, query_name, dist, n_pts) in templ_query_aux_list:
 
 #print("dict: ", matrix_distance_dict)
 acertos = 0
-
+avg_distance = 0
+distances = []
 for (query_name, comp_dict) in matrix_distance_dict.items():
     (minor_templ_name, minor_val, n_pts) = get_minor_value(comp_dict)
     matching_status = "ERROR"
@@ -62,14 +63,28 @@ for (query_name, comp_dict) in matrix_distance_dict.items():
     if minor_templ_name == query_name.split('_')[0]:
         matching_status = "OK!"
         acertos = acertos + 1
+        prob_i = float(minor_val)/100
+        avg_distance += prob_i
+        distances.append(prob_i)
     else:
         matching_status = matching_status + "  (" + query_name.split('_')[0] + ", " +  str(comp_dict[query_name.split('_')[0]]) + ")"
     
     print(query_name + " x " + minor_templ_name + ": " + str(minor_val) + "  " + matching_status + " pts = " + str(n_pts))
 
 n_items = len(matrix_distance_dict.items())
-
 acuracia = float(acertos)/n_items
+avg_distance = float(avg_distance)/acertos
 
-print("Acertos = ", acertos)
-print("Accuracy = ", acuracia)
+# standart deviation of avg_distance
+N = len(distances)
+std_avg_distance = 0
+for pi in distances:
+    std_avg_distance += (pi - avg_distance)*(pi - avg_distance)
+
+std_avg_distance = math.sqrt(float(std_avg_distance)/(N))
+
+
+print("- Acertos = ", acertos)
+print("- Accuracy = ", acuracia)
+print("- Average Distance = ", avg_distance)
+print("- Standart deviation of Average Distance = ", std_avg_distance)

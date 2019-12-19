@@ -117,12 +117,12 @@ def calc_homography_distance(template_pts, test_pts):#(pairs_points):
     #print("n = ", n)
     dist_array.sort()
     errors = np.array(dist_array)#dist_array[0:4]
-    #median_error = np.median(dist_array)
+    dist = np.average(dist_array)
 
     #return (1.0-matchings_percent), median_error/n
     # math.sqrt((dist/n)**2 + (1.0 - n/150)**2)
-    return 100*(dist/n), new_template_pts, new_test_pts, h_inv#*(1.0 - n/150) if n/150 >= 0.1 else float('Inf')#(1.0-matchings_percent)#(1 - matchings_percent)#np.median(errors)/n#1.0/n#dist/n
-
+    #return 100*(dist/n), new_template_pts, new_test_pts, h_inv#*(1.0 - n/150) if n/150 >= 0.1 else float('Inf')#(1.0-matchings_percent)#(1 - matchings_percent)#np.median(errors)/n#1.0/n#dist/n
+    return 100*dist, new_template_pts, new_test_pts, h_inv
 
 if __name__ == '__main__' :
     # acessible vs acessible test 0
