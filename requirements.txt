@@ -1,0 +1,8 @@
+matplotlib==2.1.1
+opencv_contrib_python==4.2.0.32
+scipy==0.19.1
+numpy==1.13.3
+bresenham==0.2.1
+Pillow==8.3.1
+point==0.0.1
+tabulate==0.8.9

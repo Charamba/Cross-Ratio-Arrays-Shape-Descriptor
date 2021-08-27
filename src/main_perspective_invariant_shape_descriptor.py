@@ -5,10 +5,12 @@ from VanishPencilsTable import *
 import matplotlib.pylab as pl
 from matplotlib.patches import ConnectionPatch
 import time
+import cv2
 
 import pickle
 
-from PIL import Image
+#from PIL import Image
+import Image
 from Scanner import *
 from MatchingProcessor import *
 #from resizeimage import resizeimage
@@ -86,8 +88,9 @@ fig = plt.figure()
 filename = askopenfilename(filetypes=[("all files","*"),("Bitmap Files","*.bmp; *.dib"),
 										("JPEG", "*.jpg; *.jpe; *.jpeg; *.jfif"),
 										("PNG", "*.png"), ("TIFF", "*.tiff; *.tif")])
-
-templateImage = Image(misc.imread(filename, mode = 'RGB'))
+template_img = cv2.imread(filename)
+template_img = cv2.cvtColor(template_img, cv2.COLOR_BGR2RGB)
+templateImage = Image(template_img)#mode = 'RGB'))
 name1 = filename
 #templateImage.plotPixelGrid()
 
@@ -95,7 +98,9 @@ filename = askopenfilename(filetypes=[("all files","*"),("Bitmap Files","*.bmp; 
 										("JPEG", "*.jpg; *.jpe; *.jpeg; *.jfif"),
 										("PNG", "*.png"), ("TIFF", "*.tiff; *.tif")])
 name2 = filename
-testImage = Image(misc.imread(filename, mode = 'RGB'))
+test_img = cv2.imread(filename)
+test_img = cv2.cvtColor(test_img, cv2.COLOR_BGR2RGB)
+testImage = Image(test_img)#mode = 'RGB'))
 #testImage.plotPixelGrid()
 #fixed = check_dimensions(testImage)
 #print(fixed.width,fixed.height)
@@ -287,7 +292,7 @@ if compare:
 	template_pts = np.array([[templ_pt.x, templ_pt.y] for (templ_pt, _) in matchedVerticesPairs])
 	test_pts     = np.array([[test_pt.x, test_pt.y] for (_, test_pt) in matchedVerticesPairs])
 
-	## Estimando homografia e erro de transferência pelos vértices associados
+	## Estimando homografia e erro de transferencia pelos vertices associados
 	
 	(dist_hull, new_template_pts, new_test_pts, hinv) = calc_homography_distance(template_pts, test_pts)
 	print("percentual transfer error distance (hull vertices): ", dist_hull)
