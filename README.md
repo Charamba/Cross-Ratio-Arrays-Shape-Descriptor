@@ -26,7 +26,7 @@ Install packages using pip (or pip3) with requirements.txt file.
 ```
 
 ## Example of Use
-Below is shown an executable script that compares two binary images using CRA to scan and to compare the features of the planar shapes and returns NTE metric (a shape distance).
+Below is shown an executable script that compares two images using CRA to scan and to compare the features of the planar shapes and returns NTE metric (a shape distance explained in our paper).
 
 ```sh
 
