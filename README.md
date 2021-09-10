@@ -2,7 +2,7 @@
 
 This is an implementation of Cross Ratio Array (CRA) shape descriptor in Python. CRA is truly Projective Invariant and robust to occlusion and was published in **Computers & Graphics** journal.
 
-In this repository, you will find the source code of CRA, the used datasets with protectively deformed shapes in different elevation and azimuth angles, and also occluded shapes in different occlusion percentages. 
+In this repository, you will find the source code of CRA, the used datasets with projectively deformed shapes in different elevation and azimuth angles, and also occluded shapes in different occlusion percentages. 
 
 ## Highlights
 
