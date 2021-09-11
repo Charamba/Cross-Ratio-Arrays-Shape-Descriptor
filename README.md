@@ -68,7 +68,7 @@ emitter_points_number = SAMPLE
 
 If you find CRA useful, please cite the following paper:
 
-CHARAMBA, Luiz G.; MELO, Silvio; DE LIMA, Ullayne. Cross Ratio Arrays: A Descriptor Invariant to Severe Projective Deformation and Robust to Occlusion for Planar Shape Recognition. **Computers & Graphics**, 2021. https://doi.org/10.1016/j.cag.2021.08.001
+CHARAMBA, Luiz G.; MELO, Silvio; DE LIMA, Ullayne. *Cross Ratio Arrays: A Descriptor Invariant to Severe Projective Deformation and Robust to Occlusion for Planar Shape Recognition*. **Computers & Graphics**, 2021. https://doi.org/10.1016/j.cag.2021.08.001
 
     @article{charamba2021cross,
     title={Cross Ratio Arrays: A Descriptor Invariant to Severe Projective Deformation and Robust to Occlusion for Planar Shape Recognition.},
